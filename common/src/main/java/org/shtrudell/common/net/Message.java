@@ -18,7 +18,7 @@ public class Message implements Serializable {
 
     MessageType type;
 
-    protected Message() {
+    public Message() {
 
     }
 }
