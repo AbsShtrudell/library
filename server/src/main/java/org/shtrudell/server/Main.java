@@ -3,12 +3,11 @@ package org.shtrudell.server;
 
 import org.shtrudell.server.integration.StandardDaoImp;
 import org.shtrudell.server.model.Role;
+import org.shtrudell.server.net.Server;
 
 public class Main {
     public static void main(String[] args) {
-        Role role = Role.builder().name("Admin").build();
-
-        StandardDaoImp<Role> dao = new StandardDaoImp<>(Role.class);
-        dao.create(role);
+        Server server = new Server();
+        server.start();
     }
 }

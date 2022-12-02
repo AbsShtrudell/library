@@ -20,7 +20,7 @@ public class MessageHandler {
                 if (queryMessage.getUsers().size() == 0)
                     return getFailureMessage("No user to authenticate!");
                 var user = queryMessage.getUsers().get(0);
-                if (!userController.authenticate(user.getName(), user.getPass()))
+                if (!userController.authenticate(user.getLogin(), user.getPass()))
                     return getFailureMessage("Wrong login or password!");
                 else
                     return getSuccessMessage();
@@ -57,7 +57,7 @@ public class MessageHandler {
 
     private AnswerMessage getSuccessMessage() {
         return AnswerMessage.builder().
-                result(MessageResult.FAILURE).
+                result(MessageResult.SUCCESS).
                 message("").
                 build();
     }

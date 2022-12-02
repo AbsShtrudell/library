@@ -11,7 +11,6 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-@ToString
 public class DocumentDTO implements Serializable {
     private final Integer id;
     private final DocnameDTO name;

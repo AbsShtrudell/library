@@ -5,6 +5,8 @@ import org.shtrudell.server.integration.StandardDao;
 import org.shtrudell.server.integration.StandardDaoImp;
 import org.shtrudell.server.model.User;
 
+import java.util.Arrays;
+
 public class UserController {
     StandardDao<User> userDao;
 
@@ -18,7 +20,7 @@ public class UserController {
         var user = userDao.findByUniqueColumn("login", login);
 
         if(user == null) return false;
-        return user.getPass() == password;
+        return Arrays.equals(user.getPass(),password);
     }
 
     public boolean register(User user) {

@@ -12,7 +12,6 @@ import java.time.LocalDate;
  */
 @Data
 @Builder
-@ToString
 public class DocnameDTO implements Serializable {
     private final Integer id;
     private final String title;
