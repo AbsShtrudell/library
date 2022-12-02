@@ -1,10 +1,11 @@
 package org.shtrudell.server.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.shtrudell.server.integration.Identifiable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "role")
@@ -12,7 +13,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
+@ToString
+@Builder
+public class Role implements Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -20,4 +23,13 @@ public class Role {
 
     @Column(name = "Name", length = 50)
     private String name;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToMany(targetEntity = Fund.class, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "role_fund",
+            joinColumns = { @JoinColumn(name = "RoleID", referencedColumnName = "ID") },
+            inverseJoinColumns = { @JoinColumn(name = "FundID", referencedColumnName = "ID")})
+    private Set<Fund> funds = new HashSet<>();
 }

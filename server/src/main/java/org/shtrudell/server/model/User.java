@@ -1,10 +1,8 @@
 package org.shtrudell.server.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.shtrudell.server.integration.Identifiable;
 
 @Entity
 @Table(name = "user")
@@ -12,7 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@ToString
+@Builder
+public class User implements Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -30,7 +30,7 @@ public class User {
     @Column(name = "Login", nullable = false, length = 50)
     private String login;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "RoleID", nullable = false)
     private Role role;
 }

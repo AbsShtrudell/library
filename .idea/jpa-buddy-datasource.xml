@@ -4,6 +4,7 @@
     <data-source-infos>
       <data-source-info id="c7c45bda-c2a6-48db-9496-90fef723cde8" persistence-unit-name="library" />
       <data-source-info id="c7c45bda-c2a6-48db-9496-90fef723cde8" persistence-unit-name="Default" />
+      <data-source-info id="c7c45bda-c2a6-48db-9496-90fef723cde8" persistence-unit-name="Library" />
     </data-source-infos>
   </component>
 </project>

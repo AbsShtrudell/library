@@ -1,10 +1,8 @@
 package org.shtrudell.server.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.shtrudell.server.integration.Identifiable;
 
 @Entity
 @Table(name = "author")
@@ -12,7 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Author {
+@ToString
+@Builder
+public class Author implements Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)

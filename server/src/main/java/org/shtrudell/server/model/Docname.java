@@ -1,10 +1,8 @@
 package org.shtrudell.server.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.shtrudell.server.integration.Identifiable;
 
 import java.time.LocalDate;
 
@@ -14,7 +12,9 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Docname {
+@ToString
+@Builder
+public class Docname implements Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -29,8 +29,9 @@ public class Docname {
     @Column(name = "ReleaseDate")
     private LocalDate releaseDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "AuthorID", nullable = false)
+    @ToString.Exclude
     private Author author;
 
     @Column(name = "ISBN", nullable = false)

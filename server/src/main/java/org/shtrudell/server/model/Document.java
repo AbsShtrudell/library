@@ -1,10 +1,11 @@
 package org.shtrudell.server.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.shtrudell.server.integration.Identifiable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "document")
@@ -12,7 +13,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Document {
+@ToString
+@Builder
+public class Document implements Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -20,5 +23,6 @@ public class Document {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "NameID", nullable = false)
+    @ToString.Exclude
     private Docname name;
 }

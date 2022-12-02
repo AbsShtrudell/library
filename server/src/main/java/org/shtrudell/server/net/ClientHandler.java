@@ -1,7 +1,7 @@
 package org.shtrudell.server.net;
 
-import org.shtrudell.common.net.Message;
-import org.shtrudell.server.MessageHandler;
+import org.shtrudell.common.net.AnswerMessage;
+import org.shtrudell.common.net.QueryMessage;
 
 import java.io.*;
 import java.net.Socket;
@@ -33,10 +33,15 @@ public class ClientHandler implements Runnable, Closeable {
         }
         while (connected && !closed) {
             try {
-                System.out.print(messageHandler);
-                sendMsg(receiveMsg());
-            } catch (IOException | ClassNotFoundException e) {
+                QueryMessage queryMessage = receiveMsg();
+                AnswerMessage msg = messageHandler.handleMessage(queryMessage);
+                if(msg == null) continue;
+                sendMsg(msg);
+            } catch (IOException e) {
                 System.out.println("Client Disconnected");
+                close();
+            } catch (ClassNotFoundException e) {
+                System.out.println("Corrupted message");
                 close();
             } catch (Exception e) {
                 System.out.println("Unknown Error! Client Disconnected");
@@ -52,14 +57,14 @@ public class ClientHandler implements Runnable, Closeable {
         closed = true;
     }
 
-    private void sendMsg(Message msg) throws IOException {
+    private void sendMsg(AnswerMessage msg) throws IOException {
         toClient.writeObject(msg);
         toClient.flush();
         toClient.reset();
     }
 
-    private Message receiveMsg() throws IOException, ClassNotFoundException {
-        return (Message) fromClient.readObject();
+    private QueryMessage receiveMsg() throws IOException, ClassNotFoundException {
+        return (QueryMessage) fromClient.readObject();
     }
 
     private void disconnectClient() {

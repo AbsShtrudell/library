@@ -5,17 +5,21 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
-public abstract class BaseDAO {
+public abstract class DaoBase {
     protected final EntityManagerFactory emFactory;
 
     protected final ThreadLocal<EntityManager> threadLocalEntityManager = new ThreadLocal<>();
 
-    protected BaseDAO() {
+    protected DaoBase() {
         emFactory = Persistence.createEntityManagerFactory("Library");
     }
 
     public void update() {
         commitTransaction();
+    }
+
+    protected EntityManager getEntityManager() {
+        return emFactory.createEntityManager();
     }
 
     protected EntityManager beginTransaction() {
