@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.AdminFund">
+   <children>
+      <ListView prefHeight="536.0" prefWidth="396.0" />
+      <VBox prefHeight="548.0" prefWidth="750.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="69.0" prefWidth="551.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="42.0" style="-fx-font-size: 14;" text="Name">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField promptText="Fund Name" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</HBox>

@@ -15,7 +15,12 @@ import java.util.List;
 @Builder
 public class FundDTO implements Serializable {
     private final Integer id;
-    private final String name;
+    private String name;
     @Singular
-    private final List<DocumentDTO> documents;
+    private List<DocumentDTO> documents;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

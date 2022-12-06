@@ -16,14 +16,12 @@ import java.util.List;
 @Builder
 public class RoleDTO implements Serializable {
     private final Integer id;
-    private final String name;
+    private String name;
     @Singular
-    private final List<Fund> funds = new ArrayList<>();
+    private List<SimpleFundDTO> funds;
 
-    @Data
-    @Builder
-    public static class Fund {
-        private final Integer id;
-        private final String name;
+    @Override
+    public String toString() {
+        return name;
     }
 }

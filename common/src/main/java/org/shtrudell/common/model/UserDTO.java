@@ -1,8 +1,6 @@
 package org.shtrudell.common.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -13,9 +11,9 @@ import java.io.Serializable;
 @Builder
 public class UserDTO implements Serializable {
     private final Integer id;
-    private final String name;
-    private final String surname;
-    private final byte[] pass;
-    private final String login;
-    private final RoleDTO role;
+    private String name;
+    private String surname;
+    private byte[] pass;
+    private String login;
+    private RoleDTO role;
 }

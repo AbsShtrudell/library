@@ -16,4 +16,9 @@ public class AuthorDTO implements Serializable {
     private final String name;
     private final String surname;
     private final String patronymic;
+
+    @Override
+    public String toString() {
+        return name + " " + surname + " " + patronymic;
+    }
 }

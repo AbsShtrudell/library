@@ -19,4 +19,9 @@ public class DocnameDTO implements Serializable {
     private final LocalDate releaseDate;
     private final AuthorDTO author;
     private final Integer isbn;
+
+    @Override
+    public String toString() {
+        return title + " " + edition + " ed., isbn:" + isbn;
+    }
 }
