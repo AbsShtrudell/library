@@ -32,4 +32,5 @@ public class Fund implements Identifiable {
             joinColumns = { @JoinColumn(name = "FundID", referencedColumnName = "ID")},
             inverseJoinColumns = { @JoinColumn(name = "DocumentID", referencedColumnName = "ID") })
     private Set<Document> documents = new HashSet<>();
+
 }

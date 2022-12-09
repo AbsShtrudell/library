@@ -12,6 +12,8 @@ public interface StandardDao<T> {
 
     public T findByUniqueColumn(String columnName, Object value);
 
+    public List<T> findByColumn(String columnName, Object value);
+
     public T findById(Integer id);
 
     public void create(T entity) throws PersistenceException;

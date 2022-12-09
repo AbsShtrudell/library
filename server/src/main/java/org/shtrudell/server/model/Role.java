@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.shtrudell.server.integration.Identifiable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,5 +33,5 @@ public class Role implements Identifiable {
             name = "role_fund",
             joinColumns = { @JoinColumn(name = "RoleID", referencedColumnName = "ID") },
             inverseJoinColumns = { @JoinColumn(name = "FundID", referencedColumnName = "ID")})
-    private Set<Fund> funds = new HashSet<>();
+    private List<Fund> funds = new ArrayList<>();
 }

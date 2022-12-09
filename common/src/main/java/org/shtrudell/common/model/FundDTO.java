@@ -18,7 +18,6 @@ public class FundDTO implements Serializable {
     private String name;
     @Singular
     private List<DocumentDTO> documents;
-
     @Override
     public String toString() {
         return name;

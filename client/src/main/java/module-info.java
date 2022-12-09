@@ -10,5 +10,6 @@ module org.shtrudell.client {
     opens org.shtrudell.client to javafx.fxml;
     exports org.shtrudell.client;
     exports org.shtrudell.client.fxml;
+    exports org.shtrudell.client.net;
     opens org.shtrudell.client.fxml to javafx.fxml;
 }

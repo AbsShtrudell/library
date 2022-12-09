@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import org.shtrudell.client.net.DataController;
 import org.shtrudell.common.model.DocumentDTO;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class MainWindow {
     private AnchorPane additionalWindowsPane;
 
     private EventHandler<ActionEvent> logOutEvent;
+    private EventHandler<ActionEvent> closeEvent;
 
     @FXML
     private void initialize() {
@@ -23,10 +25,14 @@ public class MainWindow {
 
     @FXML
     private void logoutAction(ActionEvent actionEvent) {
+        if(logOutEvent != null)
+            logOutEvent.handle(new ActionEvent());
     }
 
     @FXML
     private void closeAction(ActionEvent actionEvent) {
+        if(closeEvent != null)
+            closeEvent.handle(new ActionEvent());
     }
 
     @FXML
@@ -93,5 +99,9 @@ public class MainWindow {
 
     public void setLogOutEvent(EventHandler<ActionEvent> logOutEvent) {
         this.logOutEvent = logOutEvent;
+    }
+
+    public void setCloseEvent(EventHandler<ActionEvent> closeEvent) {
+        this.closeEvent = closeEvent;
     }
 }

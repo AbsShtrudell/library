@@ -3,9 +3,11 @@ package org.shtrudell.common.model;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Builder
-public class SimpleFundDTO {
+public class SimpleFundDTO implements Serializable {
     private final Integer id;
     private final String name;
 

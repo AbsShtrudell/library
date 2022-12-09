@@ -12,7 +12,7 @@ public class Server implements Closeable{
     private static final int LINGER_TIME = 5000;
     private static final int TIMEOUT_HALF_HOUR = 1800000;
     private final List<ClientHandler> clientHandlers = new ArrayList<>();
-    private final int port = 8080;
+    private final int port = 50;
     private boolean closed = false;
 
     public Server() {

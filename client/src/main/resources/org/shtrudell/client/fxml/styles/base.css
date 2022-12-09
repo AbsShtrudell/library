@@ -980,8 +980,6 @@ TextField:readonly {
  ******************************************************************************/
 
 .password-field {
-    -fx-skin: "impl.jfxtras.styles.jmetro.PasswordFieldSkin";
-
     -right-button-visible: true;
 }
 

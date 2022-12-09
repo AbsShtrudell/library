@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
+import org.shtrudell.client.MainApplication;
 import org.shtrudell.common.model.*;
 
 import java.io.IOException;
@@ -18,7 +19,8 @@ public class Funds {
 
     @FXML
     private void initialize() {
-        test();
+        List<FundDTO> funds = MainApplication.getDataController().getAllFunds();
+        setFunds(funds, MainApplication.getDataController().getAllReceiptsOfFunds(funds));
     }
 
     public void setFunds(List<FundDTO> funds, List<ReceiptDTO> receipts) {

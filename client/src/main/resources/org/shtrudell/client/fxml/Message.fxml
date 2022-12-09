@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-
-<AnchorPane prefHeight="125.0" prefWidth="250.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.Message">
+<AnchorPane prefHeight="125.0" prefWidth="250.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.Message">
    <children>
-      <Label fx:id="messageLabel" alignment="TOP_LEFT" prefHeight="62.0" prefWidth="231.0" style="-fx-font-size: 24; -fx-font-weight: bold;" text="Label" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0" />
+      <Label fx:id="messageLabel" alignment="TOP_LEFT" prefHeight="62.0" prefWidth="231.0" style="-fx-font-size: 14;" text="Label" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0" />
       <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#closeAction" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
    </children>
 </AnchorPane>

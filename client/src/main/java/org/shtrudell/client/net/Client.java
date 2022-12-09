@@ -12,7 +12,7 @@ import org.shtrudell.common.net.QueryMessage;
 
 public class Client {
     private static final int TIMEOUT_HALF_HOUR = 1800000;
-    private static final int TIMEOUT_HALF_MINUTE = 30000;
+    private static final int TIMEOUT_HALF_MINUTE = 300000;
     private Socket socket;
     private ObjectOutputStream toServer;
     private ObjectInputStream fromServer;
@@ -67,5 +67,9 @@ public class Client {
         } catch (IOException ioe) {
             System.out.println("Can't send message");
         }
+    }
+
+    public DataController getDataController() {
+        return new NetDataController(this);
     }
 }
