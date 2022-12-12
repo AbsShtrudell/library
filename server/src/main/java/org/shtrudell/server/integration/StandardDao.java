@@ -1,9 +1,6 @@
 package org.shtrudell.server.integration;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -16,7 +13,7 @@ public interface StandardDao<T> {
 
     public T findById(Integer id);
 
-    public void create(T entity) throws PersistenceException;
+    public T create(T entity) throws PersistenceException;
 
     public T update(T entity);
 

@@ -14,8 +14,19 @@ public class ConverterToDTO {
                 id(author.getId()).
                 name(author.getName()).
                 surname(author.getSurname()).
-                patronymic(author.getSurname()).
+                patronymic(author.getPatronymic()).
                 build();
+    }
+
+    public static List<AuthorDTO> convertAuthors(Collection<Author> authors) {
+        if(authors == null) return null;
+
+        List<AuthorDTO> returnValue = new ArrayList<>();
+
+        for (var author : authors) {
+            returnValue.add(convertAuthor(author));
+        }
+        return returnValue;
     }
 
     public static DocnameDTO convertDocname(Docname docname) {
@@ -30,6 +41,18 @@ public class ConverterToDTO {
                 build();
 
     }
+
+    public static List<DocnameDTO> convertDocnames(Collection<Docname> docnames) {
+        if(docnames == null) return null;
+
+        List<DocnameDTO> returnValue = new ArrayList<>();
+
+        for (var docname : docnames) {
+            returnValue.add(convertDocname(docname));
+        }
+        return returnValue;
+    }
+
     public static DocumentDTO convertDocument(Document document) {
         if(document == null) return null;
         return DocumentDTO.builder().
@@ -118,6 +141,18 @@ public class ConverterToDTO {
                 funds(convertSimpleFunds(role.getFunds())).
                 build();
     }
+
+    public static List<RoleDTO> convertRoles(Collection<Role> roles) {
+        if(roles == null) return null;
+
+        List<RoleDTO> returnValue = new ArrayList<>();
+
+        for (var role : roles) {
+            returnValue.add(convertRole(role));
+        }
+        return returnValue;
+    }
+
     public static UserDTO convertUser(User user) {
         if(user == null) return null;
         return  UserDTO.builder().
@@ -128,5 +163,16 @@ public class ConverterToDTO {
                 pass(user.getPass()).
                 role(convertRole(user.getRole())).
                 build();
+    }
+
+    public static List<UserDTO> convertUsers(Collection<User> users) {
+        if(users == null) return null;
+
+        List<UserDTO> returnValue = new ArrayList<>();
+
+        for (var user : users) {
+            returnValue.add(convertUser(user));
+        }
+        return returnValue;
     }
 }

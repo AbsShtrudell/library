@@ -65,14 +65,16 @@ public class StandardDaoImp<T extends Identifiable> extends DaoBase implements S
         return findByUniqueColumn("ID", id);
     }
 
-    public void create(T entity) throws PersistenceException {
-        if(entity == null) return;
+    public T create(T entity) throws PersistenceException {
+        if(entity == null) return null;
 
         EntityManager em = beginTransaction();
         try {
             if (!checkIfExists(entity)) {
                 em.persist(entity);
+                return entity;
             }
+            return null;
         }
         catch (PersistenceException ex) {
             throw new PersistenceException(ex);

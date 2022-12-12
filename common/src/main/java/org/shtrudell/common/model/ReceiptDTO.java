@@ -15,10 +15,10 @@ import java.util.List;
 @Data
 @Builder
 public class ReceiptDTO implements Serializable {
-    private final Integer id;
-    private final LocalDate date;
-    private final UserDTO user;
-    private final FundDTO fund;
+    private Integer id;
+    private LocalDate date;
+    private UserDTO user;
+    private FundDTO fund;
     @Singular
-    private final List<DocumentDTO> documents;
+    private List<DocumentDTO> documents;
 }

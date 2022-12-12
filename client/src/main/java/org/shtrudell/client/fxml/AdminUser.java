@@ -7,6 +7,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import org.shtrudell.client.MainApplication;
 import org.shtrudell.client.fxml.items.UserCellFactory;
 import org.shtrudell.common.model.FundDTO;
 import org.shtrudell.common.model.RoleDTO;
@@ -39,8 +40,9 @@ public class AdminUser {
 
             if(userListView.getSelectionModel().getSelectedItem() != null) {
                 userListView.getSelectionModel().getSelectedItem().setRole(newObj);
-                createRoleEdit(newObj, funds);
+                MainApplication.getDataController().updateUser(userListView.getSelectionModel().getSelectedItem());
             }
+            createRoleEdit(newObj, funds);
         });
 
         userListView.getSelectionModel().selectedItemProperty().addListener((v, oldObj, newObj) -> {
@@ -53,20 +55,9 @@ public class AdminUser {
             }
         });
 
-        test();
-    }
-
-    private void test() {
-        FundDTO fund = FundDTO.builder().id(0).name("fund").build();
-        FundDTO fund2 = FundDTO.builder().id(1).name("fund2").build();
-
-        RoleDTO role = RoleDTO.builder().id(0).fund(new SimpleFundDTO(fund)).name("role").build();
-        RoleDTO role2 = RoleDTO.builder().id(1).fund(new SimpleFundDTO(fund2)).name("role2").build();
-
-        UserDTO user = UserDTO.builder().id(0).login("login").role(role).build();
-        UserDTO user2 = UserDTO.builder().id(1).login("gg").role(role2).build();
-
-        initData(List.of(role,role2), List.of(user, user2), List.of(fund, fund2));
+        initData(MainApplication.getDataController().getAllRoles(),
+                 MainApplication.getDataController().getAllUsers(),
+                 MainApplication.getDataController().getAllFunds());
     }
 
     public void initData(List<RoleDTO> roles, List<UserDTO> users, List<FundDTO> funds) {
@@ -94,15 +85,30 @@ public class AdminUser {
             controller.init(role, funds);
 
             controller.getRoleProperty().addListener((v, oldObj, newObj)-> {
-                if(userListView.getSelectionModel().getSelectedItem() == null) return;
+                if(newObj == null) return;
 
-                for(int i = 0; i < roleChoiceBox.getItems().size(); i++) {
-                    if(Objects.equals(roleChoiceBox.getItems().get(i).getId(), newObj.getId())) {
-                        roleChoiceBox.getItems().set(i, newObj);
-                        roleChoiceBox.getSelectionModel().select(i);
-                    }
+                RoleDTO editedRole;
+                if(newObj.getId() == null) {
+                    editedRole = MainApplication.getDataController().addRole(newObj);
+                } else {
+                    editedRole = MainApplication.getDataController().updateRole(newObj);
                 }
-                userListView.getSelectionModel().getSelectedItem().setRole(newObj);
+
+                if(editedRole == null) return;
+
+                RoleDTO existedRole = roleChoiceBox.getItems().stream().
+                        filter(roleDTO -> editedRole.getId().equals(roleDTO.getId())).
+                        findFirst().
+                        orElse(null);
+                if(existedRole == null) {
+                    roleChoiceBox.getItems().add(editedRole);
+                    roleChoiceBox.getSelectionModel().selectLast();
+                }
+                else {
+
+                    existedRole.setName(editedRole.getName());
+                    existedRole.setFunds(editedRole.getFunds());
+                }
             });
 
             roleEditPane.getChildren().clear();

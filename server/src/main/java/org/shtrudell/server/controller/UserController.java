@@ -19,6 +19,20 @@ public class UserController {
         this.roleDao = new StandardDaoImp<>(Role.class);
     }
 
+    public List<User> findAllUsers() {
+        return userDao.findAll();
+    }
+
+    public List<Role> findAllRoles() {
+        return roleDao.findAll();
+    }
+
+    public User update(User user) {
+        if(user == null) return null;
+
+        return userDao.update(user);
+    }
+
     public boolean authenticate(String login, byte[] password) {
         if(login == null || password == null) return false;
 
@@ -43,5 +57,9 @@ public class UserController {
         User user = userDao.findByUniqueColumn("login", login);
         if(user == null) return null;
         else return user.getRole().getFunds();
+    }
+
+    public User getByLogin(String login) {
+        return userDao.findByUniqueColumn("login", login);
     }
 }

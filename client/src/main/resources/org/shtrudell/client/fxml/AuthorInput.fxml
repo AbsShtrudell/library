@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.AuthorInput">
+   <children>
+      <TextField fx:id="nameTextField" prefHeight="25.0" prefWidth="62.0" promptText="Name" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <HBox.margin>
+            <Insets left="-7.0" />
+         </HBox.margin>
+      </TextField>
+      <TextField fx:id="surnameTextField" prefHeight="20.0" prefWidth="80.0" promptText="Surname" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </TextField>
+      <TextField fx:id="patronymicTextField" prefHeight="20.0" prefWidth="80.0" promptText="Patronymic" style="-fx-border-color: transparent; -fx-border-width: 0; -fx-background-color: transparent;">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </TextField>
+      <Button mnemonicParsing="false" onAction="#saveAction" prefHeight="27.0" prefWidth="75.0" text="Save" />
+   </children>
+</HBox>

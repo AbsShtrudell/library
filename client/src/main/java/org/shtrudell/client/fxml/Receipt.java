@@ -8,10 +8,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import org.shtrudell.common.model.AuthorDTO;
-import org.shtrudell.common.model.DocnameDTO;
-import org.shtrudell.common.model.DocumentDTO;
-import org.shtrudell.common.model.FundDTO;
+import org.shtrudell.client.AlertBox;
+import org.shtrudell.client.MainApplication;
+import org.shtrudell.client.net.Client;
+import org.shtrudell.common.model.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,12 +47,9 @@ public class Receipt {
         editableDocumentListController.getSelectedItem().addListener((v, oldObj, newObj) -> {
         });
 
-        test();
-    }
-
-    private void test() {
-        authors = List.of(AuthorDTO.builder().name("dd").surname("ddov").build(), AuthorDTO.builder().name("aa").surname("aaov").build());
-        setDocnames(List.of(DocnameDTO.builder().id(1).title("dfs").isbn(4515).build()));
+        authors = MainApplication.getDataController().getAllAuthors();
+        setDocnames(MainApplication.getDataController().getAllDocnames());
+        setFunds(MainApplication.getDataController().getAllFunds());
     }
 
     public void setDocnames(List<DocnameDTO> docnames) {
@@ -64,14 +61,38 @@ public class Receipt {
         docNameChoiceBox.getSelectionModel().select(0);
     }
 
+    public void setFunds(List<FundDTO> funds) {
+        if(funds == null) return;
+
+        fundChoiceBox.getItems().clear();
+        fundChoiceBox.getItems().addAll(funds);
+    }
+
     @FXML
     private void applyAction(ActionEvent actionEvent) {
+        if(fundChoiceBox.getValue() == null || editableDocumentListController.getItems().size() == 0 || datePicker.getValue() == null)
+            return;
+
+        for(var document : editableDocumentListController.getItems()) {
+            if(document.getName() == null) {
+                AlertBox.display("Предупреждение","Все документы должны иметь наименование");
+                return;
+            }
+        }
+
+        MainApplication.getDataController().addReceipt(ReceiptDTO.builder().
+                date(datePicker.getValue()).
+                fund(fundChoiceBox.getValue()).
+                documents(editableDocumentListController.getItems()).
+                build());
+
+        closeAction(new ActionEvent());
     }
 
     @FXML
     private void closeAction(ActionEvent actionEvent) {
         if(closeEvent != null)
-            closeEvent.handle(null);
+            closeEvent.handle(new ActionEvent());
     }
 
     public void setCloseEvent(EventHandler<ActionEvent> closeEvent) {
@@ -109,8 +130,11 @@ public class Receipt {
             controller.getDocumentProperty().addListener((v, oldVal, newVal)-> {
                 if(newVal == document) return;
 
-                docNameChoiceBox.getItems().add(newVal);
-                docNameChoiceBox.getSelectionModel().selectLast();
+                DocnameDTO docname = MainApplication.getDataController().addDocname(newVal);
+                if(docname != null) {
+                    docNameChoiceBox.getItems().add(docname);
+                    docNameChoiceBox.getSelectionModel().selectLast();
+                }
             });
 
             docnamePane.getChildren().clear();

@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -23,6 +24,8 @@
                <menus>
                   <Menu mnemonicParsing="false" text="File">
                      <items>
+                        <MenuItem mnemonicParsing="false" onAction="#profileAction" text="Profile" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#logoutAction" text="Log Out" />
                         <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Close" />
                      </items>
@@ -30,7 +33,7 @@
                   <Menu mnemonicParsing="false" text="Edit">
                      <items>
                         <MenuItem onAction="#newReceiptAction" text="N_ew Receipt" />
-                        <MenuItem onAction="#adminAction" text="A_dmin" />
+                        <MenuItem fx:id="adminMenuItem" disable="true" onAction="#adminAction" text="A_dmin" />
                      </items>
                   </Menu>
                </menus>

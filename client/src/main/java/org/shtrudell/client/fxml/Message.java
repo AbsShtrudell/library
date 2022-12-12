@@ -4,15 +4,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 
 public class Message {
-    @FXML
-    private Label messageLabel;
-
     public EventHandler<ActionEvent> closeEventHandler;
+    @FXML
+    private Text messageText;
 
     public void setMessage(String message) {
-        messageLabel.setText(message);
+        messageText.setText(message);
     }
 
     public void setOnClose(EventHandler<ActionEvent> closeEvent) {
