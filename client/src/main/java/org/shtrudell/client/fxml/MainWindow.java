@@ -7,9 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import org.shtrudell.client.MainApplication;
-import org.shtrudell.client.net.DataController;
-import org.shtrudell.common.model.DocumentDTO;
+import lombok.Setter;
+import org.shtrudell.client.ClientApp;
+import org.shtrudell.client.util.FXMLHelper;
 
 import java.io.IOException;
 
@@ -18,17 +18,18 @@ public class MainWindow {
     private MenuItem adminMenuItem;
     @FXML
     private AnchorPane additionalWindowsPane;
-
+    @Setter
     private EventHandler<ActionEvent> logOutEvent;
+    @Setter
     private EventHandler<ActionEvent> closeEvent;
 
+    // TODO: 12.12.2022 fix available admin panel after changing role
+
+    // TODO: 12.12.2022 fix admin role check
     @FXML
     private void initialize() {
         changeToView();
-        if(MainApplication.getDataController().getUser().getRole().getName().equals("Admin")) {
-            adminMenuItem.setDisable(false);
-        }
-        else adminMenuItem.setDisable(true);
+        adminMenuItem.setDisable(!ClientApp.getDataController().getUser().getRole().getName().equals("Admin"));
     }
 
     @FXML
@@ -45,23 +46,21 @@ public class MainWindow {
 
     @FXML
     private void newReceiptAction(ActionEvent actionEvent) {
-        setAdditionalWindow(createReceiptWindow());
+        changeToNewReceipt();
     }
 
     @FXML
     private void adminAction(ActionEvent actionEvent) {
-        setAdditionalWindow(createAdminWindow());
+        changeToAdmin();
     }
 
-    private void setAdditionalWindow(Pane additionalWindow) {
-        additionalWindowsPane.getChildren().clear();
-
-        if(additionalWindow != null)
-            additionalWindowsPane.getChildren().add(additionalWindow);
+    @FXML
+    private void profileAction(ActionEvent actionEvent) {
+        changeToProfile();
     }
 
     private Pane createAdminWindow() {
-        FXMLLoader adminLoader = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/Admin.fxml"));
+        FXMLLoader adminLoader = FXMLHelper.makeLoader("Admin");
         try {
             Pane admin = adminLoader.load();
 
@@ -74,12 +73,8 @@ public class MainWindow {
         }
     }
 
-    private void changeToView() {
-        setAdditionalWindow(createViewWindow());
-    }
-
     private Pane createReceiptWindow() {
-        FXMLLoader receiptLoader = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/Receipt.fxml"));
+        FXMLLoader receiptLoader = FXMLHelper.makeLoader("Receipt");
         try {
             Pane receipt = receiptLoader.load();
 
@@ -93,20 +88,16 @@ public class MainWindow {
     }
 
     private Pane createViewWindow() {
-        FXMLLoader viewLoader = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/Funds.fxml"));
+        FXMLLoader viewLoader = FXMLHelper.makeLoader("Funds");
         try {
-            Pane view = viewLoader.load();
-
-            Funds controller = viewLoader.getController();
-
-            return view;
+            return viewLoader.load();
         } catch (IOException e) {
             return null;
         }
     }
 
     private Pane createProfileWindow() {
-        FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/Profile.fxml"));
+        FXMLLoader profileLoader = FXMLHelper.makeLoader("Profile");
         try {
             Pane view = profileLoader.load();
 
@@ -120,15 +111,26 @@ public class MainWindow {
         }
     }
 
-    public void setLogOutEvent(EventHandler<ActionEvent> logOutEvent) {
-        this.logOutEvent = logOutEvent;
+    private void setAdditionalWindow(Pane additionalWindow) {
+        additionalWindowsPane.getChildren().clear();
+
+        if(additionalWindow != null)
+            additionalWindowsPane.getChildren().add(additionalWindow);
     }
 
-    public void setCloseEvent(EventHandler<ActionEvent> closeEvent) {
-        this.closeEvent = closeEvent;
+    private void changeToView() {
+        setAdditionalWindow(createViewWindow());
     }
 
-    public void profileAction(ActionEvent actionEvent) {
+    private void changeToAdmin() {
+        setAdditionalWindow(createAdminWindow());
+    }
+
+    private void changeToProfile() {
         setAdditionalWindow(createProfileWindow());
+    }
+
+    private void changeToNewReceipt() {
+        setAdditionalWindow(createReceiptWindow());
     }
 }

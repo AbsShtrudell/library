@@ -7,11 +7,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import org.shtrudell.client.MainApplication;
-import org.shtrudell.client.fxml.items.UserCellFactory;
+import org.shtrudell.client.ClientApp;
+import org.shtrudell.client.fxml.factory.UserCellFactory;
+import org.shtrudell.client.net.DataOperationException;
+import org.shtrudell.client.util.AlertBox;
+import org.shtrudell.client.util.FXMLHelper;
 import org.shtrudell.common.model.FundDTO;
 import org.shtrudell.common.model.RoleDTO;
-import org.shtrudell.common.model.SimpleFundDTO;
 import org.shtrudell.common.model.UserDTO;
 
 import java.io.IOException;
@@ -25,7 +27,6 @@ public class AdminUser {
     private AnchorPane roleEditPane;
     @FXML
     private ListView<UserDTO> userListView;
-
     private List<FundDTO> funds;
 
     @FXML
@@ -40,7 +41,13 @@ public class AdminUser {
 
             if(userListView.getSelectionModel().getSelectedItem() != null) {
                 userListView.getSelectionModel().getSelectedItem().setRole(newObj);
-                MainApplication.getDataController().updateUser(userListView.getSelectionModel().getSelectedItem());
+
+                try {
+                    ClientApp.getDataController().updateUser(userListView.getSelectionModel().getSelectedItem());
+                }
+                catch (DataOperationException e) {
+                    AlertBox.display("Внимание", e.getMessage());
+                }
             }
             createRoleEdit(newObj, funds);
         });
@@ -55,9 +62,14 @@ public class AdminUser {
             }
         });
 
-        initData(MainApplication.getDataController().getAllRoles(),
-                 MainApplication.getDataController().getAllUsers(),
-                 MainApplication.getDataController().getAllFunds());
+        try {
+            initData(ClientApp.getDataController().getAllRoles(),
+                    ClientApp.getDataController().getAllUsers(),
+                    ClientApp.getDataController().getAllFunds());
+        }
+        catch (DataOperationException e) {
+            AlertBox.display("Внимание", e.getMessage());
+        }
     }
 
     public void initData(List<RoleDTO> roles, List<UserDTO> users, List<FundDTO> funds) {
@@ -77,7 +89,7 @@ public class AdminUser {
     }
 
     private void createRoleEdit(RoleDTO role, List<FundDTO> funds) {
-        FXMLLoader roleEditController = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/RoleEdit.fxml"));
+        FXMLLoader roleEditController = FXMLHelper.makeLoader("RoleEdit");
         try {
             Pane recieptView = roleEditController.load();
 
@@ -85,29 +97,19 @@ public class AdminUser {
             controller.init(role, funds);
 
             controller.getRoleProperty().addListener((v, oldObj, newObj)-> {
-                if(newObj == null) return;
-
-                RoleDTO editedRole;
-                if(newObj.getId() == null) {
-                    editedRole = MainApplication.getDataController().addRole(newObj);
-                } else {
-                    editedRole = MainApplication.getDataController().updateRole(newObj);
-                }
-
-                if(editedRole == null) return;
+                if (newObj == null) return;
 
                 RoleDTO existedRole = roleChoiceBox.getItems().stream().
-                        filter(roleDTO -> editedRole.getId().equals(roleDTO.getId())).
+                        filter(roleDTO -> newObj.getId().equals(roleDTO.getId())).
                         findFirst().
                         orElse(null);
-                if(existedRole == null) {
-                    roleChoiceBox.getItems().add(editedRole);
-                    roleChoiceBox.getSelectionModel().selectLast();
-                }
-                else {
 
-                    existedRole.setName(editedRole.getName());
-                    existedRole.setFunds(editedRole.getFunds());
+                if (existedRole == null) {
+                    roleChoiceBox.getItems().add(newObj);
+                    roleChoiceBox.getSelectionModel().selectLast();
+                } else {
+                    existedRole.setName(newObj.getName());
+                    existedRole.setFunds(newObj.getFunds());
                 }
             });
 
@@ -120,8 +122,6 @@ public class AdminUser {
 
     @FXML
     private void addNewRole(ActionEvent actionEvent) {
-        RoleDTO role = null;
-
         createRoleEdit(null, funds);
     }
 }

@@ -5,7 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import org.shtrudell.client.fxml.items.DocumentCellFactory;
+import org.shtrudell.client.fxml.factory.DocumentCellFactory;
 import org.shtrudell.common.model.DocnameDTO;
 import org.shtrudell.common.model.DocumentDTO;
 
@@ -48,7 +48,6 @@ public class EditableDocumentList {
         if(documentsListView.getSelectionModel().getSelectedItem() == null) return;
 
         DocumentDTO document = documentsListView.getSelectionModel().getSelectedItem();
-        int selectedIndex = documentsListView.getSelectionModel().getSelectedIndex();
         documentsListView.getItems().set(documentsListView.getSelectionModel().getSelectedIndex(), DocumentDTO.builder().
                         id(document.getId()).
                         name(docname).

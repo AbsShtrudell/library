@@ -24,16 +24,16 @@
                <menus>
                   <Menu mnemonicParsing="false" text="File">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#profileAction" text="Profile" />
+                        <MenuItem mnemonicParsing="false" onAction="#profileAction" text="Профиль" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#logoutAction" text="Log Out" />
-                        <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#logoutAction" text="Выйти из профиля" />
+                        <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Выйти" />
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Edit">
                      <items>
-                        <MenuItem onAction="#newReceiptAction" text="N_ew Receipt" />
-                        <MenuItem fx:id="adminMenuItem" disable="true" onAction="#adminAction" text="A_dmin" />
+                        <MenuItem onAction="#newReceiptAction" text="Новый акт" />
+                        <MenuItem fx:id="adminMenuItem" disable="true" onAction="#adminAction" text="Администратор" />
                      </items>
                   </Menu>
                </menus>

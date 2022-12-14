@@ -18,7 +18,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="69.0" prefWidth="551.0" spacing="10.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="31.0" style="-fx-font-size: 14;" text="Role">
+                  <Label prefHeight="18.0" prefWidth="31.0" style="-fx-font-size: 14;" text="Роль">
                      <font>
                         <Font size="14.0" />
                      </font>

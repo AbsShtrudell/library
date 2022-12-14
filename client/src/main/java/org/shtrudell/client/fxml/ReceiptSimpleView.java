@@ -2,16 +2,22 @@ package org.shtrudell.client.fxml;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import org.shtrudell.client.fxml.items.DocumentCellFactory;
+import org.shtrudell.client.fxml.factory.DocumentCellFactory;
+import org.shtrudell.client.util.AlertBox;
 import org.shtrudell.common.model.DocumentDTO;
 import org.shtrudell.common.model.ReceiptDTO;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+
+// TODO: 12.12.2022 fix date position
 
 public class ReceiptSimpleView {
     @FXML
@@ -22,7 +28,7 @@ public class ReceiptSimpleView {
     private Label fundNameLAbel;
     @FXML
     private ListView<DocumentDTO> documentsListView;
-
+    private ReceiptDTO receipt;
     @FXML
     private void initialize() {
         documentsListView.setCellFactory(new DocumentCellFactory());
@@ -30,6 +36,8 @@ public class ReceiptSimpleView {
 
     public void setReceipt(ReceiptDTO receipt) {
         if(receipt == null) return;
+
+        this.receipt = receipt;
 
         if(receipt.getUser() != null)
             setUserLogin(receipt.getUser().getLogin());
@@ -64,5 +72,28 @@ public class ReceiptSimpleView {
 
     public ReadOnlyObjectProperty<DocumentDTO> getSelectedItem() {
         return documentsListView.getSelectionModel().selectedItemProperty();
+    }
+
+    public void saveToFileAction(ActionEvent actionEvent) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(String.format("%d-%s-%s.txt",receipt.getId(), receipt.getFund().getName(), receipt.getDate().toString())));
+            StringBuilder receiptText = new StringBuilder(String.format("""
+                    Акт о поступлении от %s
+                    -------------------------------
+                    Пользователь: %s
+                    Фонд: %s
+                    -------------------------------"""
+                    , dateLabel.getText(), userLoginLabel.getText(), fundNameLAbel.getText()));
+            for(var doc : documentsListView.getItems()) {
+                receiptText.append("\n").append(doc.toString());
+            }
+
+            writer.write(receiptText.toString());
+            writer.close();
+            AlertBox.display("Уведомление", "Акт успешно сохранен в файл");
+        }
+        catch (IOException ignored) {
+
+        }
     }
 }

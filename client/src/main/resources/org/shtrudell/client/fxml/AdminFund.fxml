@@ -15,12 +15,12 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="69.0" prefWidth="551.0" spacing="10.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="42.0" style="-fx-font-size: 14;" text="Name">
+                  <Label prefHeight="18.0" prefWidth="67.0" style="-fx-font-size: 14;" text="Название">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField promptText="Fund Name" />
+                  <TextField promptText="Название фонда" />
                </children>
             </HBox>
          </children>

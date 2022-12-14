@@ -3,12 +3,12 @@ package org.shtrudell.client.fxml;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import org.shtrudell.client.AlertBox;
-import org.shtrudell.client.MainApplication;
-import org.shtrudell.client.net.DataController;
+import lombok.Setter;
+import org.shtrudell.client.util.AlertBox;
+import org.shtrudell.client.ClientApp;
+import org.shtrudell.client.net.DataOperationException;
 import org.shtrudell.common.util.HashPassword;
 
 import java.io.UnsupportedEncodingException;
@@ -19,21 +19,10 @@ public class Login {
     private TextField loginField;
     @FXML
     private PasswordField passwordField;
-    @FXML
-    private Button loginButton;
-
+    @Setter
     EventHandler<ActionEvent> singUpEvent;
-
+    @Setter
     EventHandler<ActionEvent> successfulLoginEvent;
-
-    public void setSuccessfulLoginEvent(EventHandler<ActionEvent> successfulLoginEvent) {
-        this.successfulLoginEvent = successfulLoginEvent;
-    }
-
-    public void setSingUpEvent(EventHandler<ActionEvent> singUpEvent) {
-        this.singUpEvent = singUpEvent;
-    }
-
 
     @FXML
     private void initialize() {
@@ -42,21 +31,20 @@ public class Login {
 
     @FXML
     private void loginAction(ActionEvent actionEvent) {
-        if (loginField.getText() == null || loginField.getText().isBlank()) {
-            AlertBox.display("Warning", "Enter login");
-            return;
-        }
-
-        if (passwordField.getText() == null || passwordField.getText().isBlank()) {
-            AlertBox.display("Warning", "Enter password");
+        if (loginField.getText() == null ||loginField.getText().isBlank() ||
+            passwordField.getText() == null || passwordField.getText().isBlank()) {
+            AlertBox.display("Внимание", "Все поля должны быть заполнены");
             return;
         }
 
         try {
-            if (MainApplication.getDataController().authenticate(loginField.getText(), HashPassword.getHash(passwordField.getText())))
+            if (ClientApp.getDataController().authenticate(loginField.getText(), HashPassword.getHash(passwordField.getText())))
                 successfulLoginEvent.handle(new ActionEvent());
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+        }
+        catch (DataOperationException e) {
+            AlertBox.display("Внимание", e.getMessage());
+        }
+        catch (NoSuchAlgorithmException | UnsupportedEncodingException ignored) {
         }
     }
 

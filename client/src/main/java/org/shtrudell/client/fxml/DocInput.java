@@ -1,7 +1,6 @@
 package org.shtrudell.client.fxml;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,15 +8,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import org.shtrudell.client.MainApplication;
+import lombok.Getter;
+import org.shtrudell.client.ClientApp;
+import org.shtrudell.client.net.DataOperationException;
+import org.shtrudell.client.util.AlertBox;
+import org.shtrudell.client.util.FXMLHelper;
 import org.shtrudell.common.model.AuthorDTO;
 import org.shtrudell.common.model.DocnameDTO;
 
 import java.io.IOException;
 import java.util.List;
+
+/// TODO: 13.12.2022 clear author input after select existed author
 
 public class DocInput {
     @FXML
@@ -32,11 +36,11 @@ public class DocInput {
     private DatePicker datePicker;
     @FXML
     private ChoiceBox<AuthorDTO> authorChoiceBox;
-
+    @Getter
     private final ObjectProperty<DocnameDTO> documentProperty;
 
     public DocInput() {
-        documentProperty = new SimpleObjectProperty<DocnameDTO>();
+        documentProperty = new SimpleObjectProperty<>();
     }
 
     @FXML
@@ -53,12 +57,12 @@ public class DocInput {
         this.documentProperty.setValue(documentProperty);
     }
 
-    public ReadOnlyObjectProperty<DocnameDTO> getDocumentProperty() {
-        return documentProperty;
-    }
-
     public void saveAction(ActionEvent actionEvent) {
-        if (isbnTextField.getText() == null || editionTextField.getText() == null) return;
+        if (isbnTextField.getText() == null || editionTextField.getText() == null || authorChoiceBox.getValue() == null ||
+                isbnTextField.getText().isBlank() || editionTextField.getText().isBlank()) {
+            AlertBox.display("Внимание", "Все поля должны быть заполнены");
+            return;
+        }
 
         int edition;
         int isbn;
@@ -67,6 +71,7 @@ public class DocInput {
             edition = Integer.parseInt(editionTextField.getText());
             isbn = Integer.parseInt(isbnTextField.getText());
         } catch (NumberFormatException e) {
+            AlertBox.display("Внимание", "Некорректные данные");
             return;
         }
 
@@ -86,26 +91,30 @@ public class DocInput {
 
     private void createAuthorInput() {
 
-        FXMLLoader authorInputLoader = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/AuthorInput.fxml"));
+        FXMLLoader authorInputLoader = FXMLHelper.makeLoader("AuthorInput");
         try {
             Pane authorInput = authorInputLoader.load();
 
             AuthorInput controller = authorInputLoader.getController();
             controller.getAuthorProperty().addListener((v, oldObj, newObj) -> {
-                AuthorDTO author = MainApplication.getDataController().addAuthor(newObj);
+                try {
+                    AuthorDTO author = ClientApp.getDataController().addAuthor(newObj);
 
-                if(author != null) {
-                    authorChoiceBox.getItems().add(author);
-                    authorChoiceBox.getSelectionModel().selectLast();
-                    authorInputPane.getChildren().clear();
+                    if (author != null) {
+                        authorChoiceBox.getItems().add(author);
+                        authorChoiceBox.getSelectionModel().selectLast();
+                        authorInputPane.getChildren().clear();
+                    }
+                }
+                catch (DataOperationException e) {
+                    AlertBox.display("Внимание", e.getMessage());
                 }
             });
 
             authorInputPane.getChildren().clear();
             authorInputPane.getChildren().add(authorInput);
 
-        } catch (IOException e) {
-            return;
+        } catch (IOException ignored) {
         }
     }
 }

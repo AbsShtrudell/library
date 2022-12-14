@@ -5,13 +5,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="125.0" prefWidth="250.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.Message">
+<AnchorPane prefHeight="125.0" prefWidth="275.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.Message">
    <children>
       <Text fx:id="messageText" layoutX="10.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="text" wrappingWidth="231.0">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#closeAction" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#closeAction" text="Закрыть" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
    </children>
 </AnchorPane>

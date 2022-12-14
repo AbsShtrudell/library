@@ -12,15 +12,21 @@ class NetDataController implements DataController{
     Client client;
     UserDTO user;
 
-    public UserDTO getUser() {
-        return user;
-    }
-
     public NetDataController(Client client) {
         this.client = client;
     }
 
-    public boolean authenticate(String login, byte[] password) {
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
+    @Override
+    public UserDTO getUser() {
+        return user;
+    }
+
+    @Override
+    public boolean authenticate(String login, byte[] password) throws DataOperationException {
         client.sendMsg(QueryMessage.builder().
                         method(MessageMethod.AUTHENTICATE).
                         user(UserDTO.builder().
@@ -30,138 +36,116 @@ class NetDataController implements DataController{
                         build());
 
         AnswerMessage message = client.receiveMsg();
-        if(message.getResult() == MessageResult.SUCCESS) {
-            this.user = message.getUsers().get(0);
-            return true;
-        } else return false;
+
+        checkMessage(message);
+
+        setUser(message.getUsers().get(0));
+        return true;
     }
 
-    public void register(UserDTO user) {
+    @Override
+    public void register(UserDTO user) throws DataOperationException{
         client.sendMsg(QueryMessage.builder().
                 method(MessageMethod.REGISTER).
                 user(user).
                 build());
 
-        client.receiveMsg();
-    }
-
-    public List<FundDTO> getAllFunds() {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.GET_ALL_FUNDS).
-                user(user).
-                build());
-
-        return client.receiveMsg().getFunds();
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
     }
 
     @Override
-    public List<ReceiptDTO> getAllReceiptsOfFunds(List<FundDTO> funds) {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.GET_ALL_RECEIPTS_OF_FUNDS).
-                funds(funds).
-                build());
-
-        return client.receiveMsg().getReceipts();
-    }
-
-    @Override
-    public List<DocnameDTO> getAllDocnames() {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.GET_ALL_DOCNAMES).
-                build());
-
-        return client.receiveMsg().getDocnames();
-    }
-
-    @Override
-    public List<AuthorDTO> getAllAuthors() {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.GET_ALL_AUTHORS).
-                build());
-
-        return client.receiveMsg().getAuthors();
-    }
-
-    @Override
-    public List<RoleDTO> getAllRoles() {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.GET_ALL_ROLES).
-                build());
-
-        return client.receiveMsg().getRoles();
-    }
-
-    @Override
-    public List<UserDTO> getAllUsers() {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.GET_ALL_USERS).
-                build());
-
-        return client.receiveMsg().getUsers();
-    }
-
-    @Override
-    public RoleDTO addRole(RoleDTO role) {
+    public RoleDTO addRole(RoleDTO role) throws DataOperationException {
         client.sendMsg(QueryMessage.builder().
                 method(MessageMethod.ADD_ROLE).
                 role(role).
                 build());
 
         AnswerMessage message = client.receiveMsg();
-        if(message.getResult().equals(MessageResult.SUCCESS))
-            return message.getRoles().get(0);
-        else return null;
+        checkMessage(message);
+
+        return message.getRoles().get(0);
     }
 
     @Override
-    public FundDTO updateFund(FundDTO fund) {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.UPDATE_FUND).
-                fund(fund).
-                build());
-
-        AnswerMessage message = client.receiveMsg();
-        if(message.getResult().equals(MessageResult.SUCCESS))
-            return message.getFunds().get(0);
-        else return null;
-    }
-
-    @Override
-    public RoleDTO updateRole(RoleDTO role) {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.UPDATE_ROLE).
-                role(role).
-                build());
-
-        AnswerMessage message = client.receiveMsg();
-        if(message.getResult().equals(MessageResult.SUCCESS))
-            return message.getRoles().get(0);
-        else return null;
-    }
-
-    @Override
-    public FundDTO addFund(FundDTO fund) {
+    public FundDTO addFund(FundDTO fund) throws DataOperationException {
         client.sendMsg(QueryMessage.builder().
                 method(MessageMethod.ADD_FUND).
                 fund(fund).
                 build());
 
         AnswerMessage message = client.receiveMsg();
-        if(message.getResult().equals(MessageResult.SUCCESS))
-            return message.getFunds().get(0);
-        else return null;
+        checkMessage(message);
+
+        return message.getFunds().get(0);
     }
 
-    public void addReceipt(ReceiptDTO receipt) {
+    @Override
+    public AuthorDTO addAuthor(AuthorDTO author) throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.ADD_AUTHOR).
+                author(author).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getAuthors().get(0);
+    }
+
+    @Override
+    public DocnameDTO addDocname(DocnameDTO docname) throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.ADD_DOCNAME).
+                docname(docname).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getDocnames().get(0);
+    }
+
+    @Override
+    public void addReceipt(ReceiptDTO receipt) throws DataOperationException {
         receipt.setUser(user);
         client.sendMsg(QueryMessage.builder().
                 method(MessageMethod.NEW_RECEIPT).
                 receipt(receipt).
                 build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
     }
 
     @Override
-    public UserDTO updateUser(UserDTO user) {
+    public FundDTO updateFund(FundDTO fund) throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.UPDATE_FUND).
+                fund(fund).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getFunds().get(0);
+    }
+
+    @Override
+    public RoleDTO updateRole(RoleDTO role) throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.UPDATE_ROLE).
+                role(role).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getRoles().get(0);
+    }
+
+    @Override
+    public UserDTO updateUser(UserDTO user) throws DataOperationException {
         client.sendMsg(QueryMessage.builder().
                 method(MessageMethod.UPDATE_USER).
                 user(user).
@@ -169,30 +153,90 @@ class NetDataController implements DataController{
 
 
         AnswerMessage message = client.receiveMsg();
-        if(message.getResult().equals(MessageResult.SUCCESS)) {
-            if (message.getUsers().get(0).getLogin().equals(user.getLogin()))
-                user = message.getUsers().get(0);
+        checkMessage(message);
 
-            return message.getUsers().get(0);
-        }
-        else return null;
+        if (message.getUsers().get(0).getLogin().equals(user.getLogin()))
+            setUser(message.getUsers().get(0));
+
+        return message.getUsers().get(0);
     }
 
-    public AuthorDTO addAuthor(AuthorDTO author) {
+    @Override
+    public List<FundDTO> getAllFunds() throws DataOperationException {
         client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.ADD_AUTHOR).
-                author(author).
+                method(MessageMethod.GET_ALL_FUNDS).
+                user(user).
                 build());
 
-        return client.receiveMsg().getAuthors().get(0);
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getFunds();
     }
 
-    public DocnameDTO addDocname(DocnameDTO docname) {
+    @Override
+    public List<ReceiptDTO> getAllReceiptsOfFunds(List<FundDTO> funds) throws DataOperationException {
         client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.ADD_DOCNAME).
-                docname(docname).
+                method(MessageMethod.GET_ALL_RECEIPTS_OF_FUNDS).
+                funds(funds).
                 build());
 
-        return client.receiveMsg().getDocnames().get(0);
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getReceipts();
+    }
+
+    @Override
+    public List<DocnameDTO> getAllDocnames() throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.GET_ALL_DOCNAMES).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getDocnames();
+    }
+
+    @Override
+    public List<AuthorDTO> getAllAuthors() throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.GET_ALL_AUTHORS).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getAuthors();
+    }
+
+    @Override
+    public List<RoleDTO> getAllRoles() throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.GET_ALL_ROLES).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getRoles();
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.GET_ALL_USERS).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getUsers();
+    }
+
+    private void checkMessage(AnswerMessage message) throws DataOperationException {
+        if(message.getResult() == MessageResult.FAILURE)
+            throw new DataOperationException(message.getMessage());
     }
 }

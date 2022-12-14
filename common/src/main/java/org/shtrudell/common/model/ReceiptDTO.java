@@ -21,4 +21,12 @@ public class ReceiptDTO implements Serializable {
     private FundDTO fund;
     @Singular
     private List<DocumentDTO> documents;
+
+    @Override
+    public String toString() {
+        if(fund != null)
+            return getId() + ": " + getFund().getName() + "-" + getDate();
+        else
+            return getId() + ": " + "null" + "-" + getDate();
+    }
 }

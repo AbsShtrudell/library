@@ -5,21 +5,21 @@ import org.shtrudell.common.model.*;
 import java.util.List;
 
 public interface DataController {
-    UserDTO getUser();
-    boolean authenticate(String login, byte[] password);
-    void register(UserDTO user);
-    List<FundDTO> getAllFunds();
-    List<ReceiptDTO> getAllReceiptsOfFunds(List<FundDTO> funds);
-    List<DocnameDTO> getAllDocnames();
-    List<AuthorDTO> getAllAuthors();
-    List<RoleDTO> getAllRoles();
-    List<UserDTO> getAllUsers();
-    RoleDTO addRole(RoleDTO role);
+    boolean authenticate(String login, byte[] password) throws DataOperationException;
+    void register(UserDTO user) throws DataOperationException;
+    RoleDTO addRole(RoleDTO role) throws DataOperationException;
     FundDTO addFund(FundDTO fund);
-    DocnameDTO addDocname(DocnameDTO docname);
-    AuthorDTO addAuthor(AuthorDTO author);
-    void addReceipt(ReceiptDTO receipt);
-    UserDTO updateUser(UserDTO user);
-    FundDTO updateFund(FundDTO fund);
-    RoleDTO updateRole(RoleDTO role);
+    DocnameDTO addDocname(DocnameDTO docname) throws DataOperationException;
+    AuthorDTO addAuthor(AuthorDTO author) throws DataOperationException;
+    void addReceipt(ReceiptDTO receipt) throws DataOperationException;
+    UserDTO updateUser(UserDTO user) throws DataOperationException;
+    FundDTO updateFund(FundDTO fund) throws DataOperationException;
+    RoleDTO updateRole(RoleDTO role) throws DataOperationException;
+    UserDTO getUser() throws DataOperationException;
+    List<FundDTO> getAllFunds() throws DataOperationException;
+    List<ReceiptDTO> getAllReceiptsOfFunds(List<FundDTO> funds) throws DataOperationException;
+    List<DocnameDTO> getAllDocnames() throws DataOperationException;
+    List<AuthorDTO> getAllAuthors() throws DataOperationException;
+    List<RoleDTO> getAllRoles() throws DataOperationException;
+    List<UserDTO> getAllUsers() throws DataOperationException;
 }

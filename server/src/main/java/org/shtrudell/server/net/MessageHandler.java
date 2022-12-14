@@ -158,7 +158,7 @@ public class MessageHandler {
                     fundDao.update(fund);
                 }
 
-                return null;
+                return getSuccessMessage();
             }
             case UPDATE_USER -> {
                 if(queryMessage.getUsers().size() == 0 || queryMessage.getUsers().get(0) == null)

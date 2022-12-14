@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
+import lombok.Getter;
+import org.shtrudell.client.util.FXMLHelper;
 import org.shtrudell.common.model.ReceiptDTO;
 
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.List;
 public class ReceiptsAccordionView {
     @FXML
     private Accordion canvas;
+    @Getter
     private final List<ReceiptSimpleView> simpleViewControllers;
 
     @FXML
@@ -24,10 +27,6 @@ public class ReceiptsAccordionView {
 
     public ReceiptsAccordionView() {
         simpleViewControllers = new ArrayList<>();
-    }
-
-    public List<ReceiptSimpleView> getSimpleViewControllers() {
-        return simpleViewControllers;
     }
 
     public void setReceipts(List<ReceiptDTO> receipts) {
@@ -51,11 +50,11 @@ public class ReceiptsAccordionView {
 
         TitledPane pane = new TitledPane();
 
-        pane.setText(receipt.getId() + ": " + receipt.getFund().getName() + "-" + receipt.getDate());
+        pane.setText(receipt.toString());
         pane.setMinHeight(200);
         pane.setMaxHeight(300);
 
-        FXMLLoader recieptViewLoader = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/ReceiptSimpleView.fxml"));
+        FXMLLoader recieptViewLoader = FXMLHelper.makeLoader("ReceiptSimpleView");
         try {
             Pane recieptView = recieptViewLoader.load();
 

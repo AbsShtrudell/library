@@ -49,10 +49,6 @@ public class DocView {
         }
     }
 
-    public void clear() {
-        canvas.setVisible(false);
-    }
-
     public void setTitle(String title) {
         if(title == null) return;
         titleLabel.setText(title);

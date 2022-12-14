@@ -18,7 +18,7 @@
             <fx:include fx:id="editableDocumentList" source="EditableDocumentList.fxml" />
             <VBox prefHeight="600.0" prefWidth="768.0">
                <children>
-                  <Label prefHeight="29.0" prefWidth="161.0" text="Receipt Form">
+                  <Label prefHeight="29.0" prefWidth="161.0" text="Форма Акта">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -27,7 +27,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="230.0" spacing="10.0">
                            <children>
-                              <Label style="-fx-font-size: 14;" text="Fund">
+                              <Label style="-fx-font-size: 14;" text="Фонд">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -37,7 +37,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="230.0" spacing="10.0">
                            <children>
-                              <Label style="-fx-font-size: 14;" text="Date">
+                              <Label style="-fx-font-size: 14;" text="Дата">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -51,7 +51,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="230.0" spacing="10.0">
                            <children>
-                              <Label style="-fx-font-size: 14;" text="Document Name">
+                              <Label style="-fx-font-size: 14;" text="Наименование">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -74,8 +74,8 @@
                   </VBox>
                   <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#applyAction" prefWidth="100.0" styleClass="attention" text="Apply" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#closeAction" prefWidth="100.0" stylesheets="@styles/light_theme.css" text="Close" />
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#closeAction" prefWidth="100.0" stylesheets="@styles/light_theme.css" text="Закрыть" />
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#applyAction" prefWidth="100.0" styleClass="attention" text="Подтвердить" />
                      </children>
                   </HBox>
                </children>

@@ -3,10 +3,9 @@ package org.shtrudell.client.fxml;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import org.shtrudell.client.fxml.items.DocumentCellFactory;
+import org.shtrudell.client.fxml.factory.DocumentCellFactory;
 import org.shtrudell.common.model.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class FundView {

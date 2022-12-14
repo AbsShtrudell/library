@@ -25,25 +25,25 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.rowIndex="1">
          <children>
-            <Label text="ISBN: " />
+            <Label text="ISBN:" />
             <Label fx:id="isbnLabel" text="ISBN_VALUE" />
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.rowIndex="2">
          <children>
-            <Label text="Edition: " />
+            <Label text="Издание:" />
             <Label fx:id="editionLabel" text="EDITION_VALUE" />
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.rowIndex="3">
          <children>
-            <Label text="Released " />
+            <Label text="Выпущен" />
             <Label fx:id="releasedDateLabel" text="RELEASE_DATE" />
          </children>
       </HBox>
-      <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Author" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Автор" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

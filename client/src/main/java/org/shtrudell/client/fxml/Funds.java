@@ -5,11 +5,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
-import org.shtrudell.client.MainApplication;
+import org.shtrudell.client.ClientApp;
+import org.shtrudell.client.net.DataOperationException;
+import org.shtrudell.client.util.AlertBox;
+import org.shtrudell.client.util.FXMLHelper;
 import org.shtrudell.common.model.*;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +21,14 @@ public class Funds {
 
     @FXML
     private void initialize() {
-        List<FundDTO> funds = MainApplication.getDataController().getAllFunds();
-        setFunds(funds, MainApplication.getDataController().getAllReceiptsOfFunds(funds));
+        try {
+            List<FundDTO> funds = ClientApp.getDataController().getAllFunds();
+            List<ReceiptDTO> receipts = ClientApp.getDataController().getAllReceiptsOfFunds(funds);
+            setFunds(funds, receipts);
+        }
+        catch (DataOperationException e) {
+            AlertBox.display("Внимание", e.getMessage());
+        }
     }
 
     public void setFunds(List<FundDTO> funds, List<ReceiptDTO> receipts) {
@@ -44,7 +52,7 @@ public class Funds {
         if(fund == null) return null;
         Tab tab = new Tab(fund.getName());
 
-        FXMLLoader fundViewLoader = new FXMLLoader(getClass().getResource("/org/shtrudell/client/fxml/FundView.fxml"));
+        FXMLLoader fundViewLoader = FXMLHelper.makeLoader("FundView");
         try {
             Pane fundView = fundViewLoader.load();
 

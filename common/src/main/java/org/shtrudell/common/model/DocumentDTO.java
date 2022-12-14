@@ -14,4 +14,10 @@ import java.io.Serializable;
 public class DocumentDTO implements Serializable {
     private final Integer id;
     private final DocnameDTO name;
+
+    @Override
+    public String toString() {
+        return String.format("%d: \"%s\" %s %s %s %d ed., isbn: %d", id, name.getTitle(), name.getAuthor().getSurname(),
+                name.getAuthor().getName(), name.getAuthor().getPatronymic(), name.getEdition(), name.getIsbn());
+    }
 }
