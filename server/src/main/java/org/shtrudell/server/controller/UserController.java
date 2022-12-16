@@ -27,7 +27,7 @@ public class UserController {
         return roleDao.findAll();
     }
 
-    public User update(User user) {
+    public User updateUser(User user) {
         if(user == null) return null;
 
         return userDao.update(user);

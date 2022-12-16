@@ -35,215 +35,263 @@ public class MessageHandler {
     }
 
     public AnswerMessage handleMessage(QueryMessage queryMessage) {
-        switch (queryMessage.getMethod()) {
+        QueryMessageReader messageReader = new QueryMessageReader(queryMessage);
+        try {
+            switch (queryMessage.getMethod()) {
             case AUTHENTICATE -> {
-                if (queryMessage.getUsers().size() == 0)
-                    return getFailureMessage("No user to authenticate!");
-                var user = queryMessage.getUsers().get(0);
-                if (!userController.authenticate(user.getLogin(), user.getPass()))
-                    return getFailureMessage("Wrong login or password!");
-                else {
-                    AnswerMessage answer = getSuccessMessage();
-                    answer.setUsers(List.of(ConverterToDTO.convertUser(userController.getByLogin(user.getLogin()))));
-                    return answer;
-                }
+                return authenticate(messageReader.getUser());
             }
             case REGISTER -> {
-                if (queryMessage.getUsers().size() == 0)
-                    return getFailureMessage("No user to Register!");
-                var user = queryMessage.getUsers().get(0);
-                if (!userController.register(User.builder().
-                        name(user.getName()).
-                        surname(user.getSurname()).
-                        login(user.getLogin()).
-                        pass(user.getPass()).
-                        build()))
-                    return getFailureMessage("Fail to register this user, try again");
-                else
-                    return getSuccessMessage();
-            }
-            case GET_ALL_FUNDS -> {
-                if (queryMessage.getUsers().size() == 0)
-                    return getFailureMessage("Can't get funds");
-                var user = queryMessage.getUsers().get(0);
-                List<Fund>funds = userController.getAllFunds(queryMessage.getUsers().get(0).getLogin());
-                AnswerMessage answer = getSuccessMessage();
-                answer.setFunds(ConverterToDTO.convertFunds(funds));
-                return answer;
-            }
-            case GET_ALL_RECEIPTS_OF_FUNDS -> {
-                if (queryMessage.getFunds().size() == 0)
-                    return getFailureMessage("Can't get receipts");
-
-                List<FundDTO>funds = queryMessage.getFunds();
-                List<Receipt> receipts = new ArrayList<>();
-                for(var fund : funds) {
-                    receipts.addAll(receiptDao.findByColumn("fund", fundDao.findById(fund.getId())));
-                }
-
-                AnswerMessage answer = getSuccessMessage();
-                answer.setReceipts(ConverterToDTO.convertReceipts(receipts));
-                return answer;
-            }
-            case GET_ALL_AUTHORS -> {
-                AnswerMessage answer = getSuccessMessage();
-                answer.setAuthors(ConverterToDTO.convertAuthors(authorDao.findAll()));
-                return answer;
-            }
-            case GET_ALL_DOCNAMES -> {
-                AnswerMessage answer = getSuccessMessage();
-                answer.setDocnames(ConverterToDTO.convertDocnames(docnameDao.findAll()));
-                return answer;
+                return register(messageReader.getUser());
             }
             case ADD_AUTHOR -> {
-                if(queryMessage.getAuthors().size() == 0 || queryMessage.getAuthors().get(0) == null)
-                    return getFailureMessage("Can't add author");
-
-                AuthorDTO authorDTO = queryMessage.getAuthors().get(0);
-
-                Author author = authorDao.create(Author.builder().
-                        name(authorDTO.getName()).
-                        surname(authorDTO.getSurname()).
-                        patronymic(authorDTO.getPatronymic()).
-                        build());
-                AnswerMessage answer = getSuccessMessage();
-                answer.setAuthors(List.of(ConverterToDTO.convertAuthor(author)));
-                return answer;
+                return addAuthor(messageReader.getAuthor());
             }
             case ADD_DOCNAME -> {
-                if(queryMessage.getDocnames().size() == 0 || queryMessage.getDocnames().get(0) == null)
-                    return getFailureMessage("Can't add docname");
-
-                DocnameDTO docnameDTO = queryMessage.getDocnames().get(0);
-
-                Docname docname = docnameDao.create(Docname.builder().
-                        title(docnameDTO.getTitle()).
-                        edition(docnameDTO.getEdition()).
-                        isbn(docnameDTO.getIsbn()).
-                        releaseDate(docnameDTO.getReleaseDate()).
-                        author(Author.builder().
-                                id(docnameDTO.getAuthor().getId()).
-                                build()).
-                        build());
-
-                AnswerMessage answer = getSuccessMessage();
-                answer.setDocnames(List.of(ConverterToDTO.convertDocname(docname)));
-                return answer;
+                return addDocname(messageReader.getDocname());
             }
-            case NEW_RECEIPT -> {
-                if(queryMessage.getReceipts().size() == 0 || queryMessage.getReceipts().get(0).getDocuments().size() == 0
-                        || queryMessage.getReceipts().get(0) == null)
-                    return getFailureMessage("Can't add receipt");
-                ReceiptDTO receiptDTO = queryMessage.getReceipts().get(0);
-                Set<Document> documents = new HashSet<>();
-                for(var document : receiptDTO.getDocuments()) {
-                    documents.add(Document.builder().
-                            name(Docname.builder().
-                                    id(document.getName().getId()).
-                                    build()).
-                            build());
-                }
-
-                Receipt receipt = receiptDao.create(Receipt.builder().
-                        fund(Fund.builder().
-                                id(receiptDTO.getFund().getId()).
-                                build()).
-                        user(userController.getByLogin(receiptDTO.getUser().getLogin())).
-                        documents(documents).
-                        date(receiptDTO.getDate()).
-                        build());
-                if(receipt != null) {
-                    Fund fund = fundDao.findById(receipt.getFund().getId());
-                    fund.getDocuments().addAll(documents);
-                    fundDao.update(fund);
-                }
-
-                return getSuccessMessage();
-            }
-            case UPDATE_USER -> {
-                if(queryMessage.getUsers().size() == 0 || queryMessage.getUsers().get(0) == null)
-                    return getFailureMessage("Can't update user");
-
-                UserDTO userDTO = queryMessage.getUsers().get(0);
-
-                User user = userController.update(User.builder().
-                                id(userDTO.getId()).
-                        name(userDTO.getName()).
-                        role(Role.builder().
-                                id(userDTO.getRole().getId()).
-                                build()).
-                        surname(userDTO.getSurname()).
-                        login(userDTO.getLogin()).
-                        pass(userDTO.getPass()).
-                        build());
-
-                AnswerMessage answer = getSuccessMessage();
-                answer.setUsers(List.of(ConverterToDTO.convertUser(user)));
-
-                return answer;
+            case ADD_RECEIPT -> {
+                return addReceipt(messageReader.getReceipt());
             }
             case ADD_ROLE -> {
-                if(queryMessage.getRoles().size() == 0 || queryMessage.getRoles().get(0) == null)
-                    return getFailureMessage("Can't add role");
-
-                RoleDTO roleDTO = queryMessage.getRoles().get(0);
-
-                List<Fund> funds = new ArrayList<>();
-                for (var fund : roleDTO.getFunds()) {
-                    funds.add(fundDao.findById(fund.getId()));
-                }
-
-                try {
-                    Role role = roleDao.create(Role.builder().
-                            name(roleDTO.getName()).
-                            build());
-
-                    role.setFunds(funds);
-                    role = roleDao.update(role);
-
-                    AnswerMessage answer = getSuccessMessage();
-                    answer.setRoles(ConverterToDTO.convertRoles(List.of(role)));
-                    return answer;
-                }
-                catch (PersistenceException ex) {
-                    return getFailureMessage("Can't add role");
-                }
+                return addRole(messageReader.getRole());
+            }
+            case ADD_SIMPLE_FUND -> {
+                return addSimpleFund(messageReader.getSimpleFund());
             }
             case UPDATE_ROLE -> {
-                if(queryMessage.getRoles().size() == 0 || queryMessage.getRoles().get(0) == null)
-                    return getFailureMessage("Can't update role");
-
-                RoleDTO roleDTO = queryMessage.getRoles().get(0);
-
-                List<Fund> funds = new ArrayList<>();
-                for (var fund : roleDTO.getFunds()) {
-                    funds.add(fundDao.findById(fund.getId()));
-                }
-
-                Role role = roleDao.update(Role.builder().
-                        id(roleDTO.getId()).
-                        name(roleDTO.getName()).
-                        funds(funds).
-                        build());
-
-                AnswerMessage answer = getSuccessMessage();
-                answer.setRoles(ConverterToDTO.convertRoles(List.of(role)));
-                return answer;
+                return updateRole(messageReader.getRole());
+            }
+            case UPDATE_USER -> {
+                return updateUser(messageReader.getUser());
+            }
+            case UPDATE_SIMPLE_FUND -> {
+                return updateSimpleFund(messageReader.getSimpleFund());
             }
             case GET_ALL_ROLES -> {
-                AnswerMessage answer = getSuccessMessage();
-                answer.setRoles(ConverterToDTO.convertRoles(userController.findAllRoles()));
-                return answer;
+                return getAllRoles();
             }
             case GET_ALL_USERS -> {
-                AnswerMessage answer = getSuccessMessage();
-                answer.setUsers(ConverterToDTO.convertUsers(userController.findAllUsers()));
-                return answer;
+                return getAllUser();
+            }
+            case GET_ALL_FUNDS -> {
+                return getAllFunds(messageReader.getUser());
+            }
+            case GET_ALL_RECEIPTS_OF_FUNDS -> {
+                return getAllReceiptsOfFunds(messageReader.getFunds());
+            }
+            case GET_ALL_AUTHORS -> {
+                return getAllAuthors();
+            }
+            case GET_ALL_DOCNAMES -> {
+                return getAllDocnames();
+            }
+            case GET_ALL_SIMPLE_FUNDS -> {
+                return getAllSimpleFunds(messageReader.getUser());
             }
             default -> {
                 return null;
             }
         }
+        } catch (QueryMessageReadException e){
+            return getFailureMessage(e.getMessage());
+        } catch (Exception e) {
+            return getFailureMessage("Unknown Error");
+        }
+    }
+
+    private AnswerMessage addReceipt(ReceiptDTO receiptDTO) {
+        if(receiptDTO.getDocuments().size() == 0)
+            return getFailureMessage("Can't add receipt");
+
+        Set<Document> documents = new HashSet<>();
+        for(var document : receiptDTO.getDocuments()) {
+            documents.add(Document.builder().
+                    name(Docname.builder().
+                            id(document.getName().getId()).
+                            build()).
+                    build());
+        }
+
+        Receipt receipt = receiptDao.create(Receipt.builder().
+                fund(Fund.builder().
+                        id(receiptDTO.getFund().getId()).
+                        build()).
+                user(userController.getByLogin(receiptDTO.getUser().getLogin())).
+                documents(documents).
+                date(receiptDTO.getDate()).
+                build());
+
+        if(receipt != null) {
+            Fund fund = fundDao.findById(receipt.getFund().getId());
+            fund.getDocuments().addAll(documents);
+            fundDao.update(fund);
+        }
+
+        return getSuccessMessage();
+    }
+    private AnswerMessage addAuthor(AuthorDTO authorDTO) {
+        Author author = authorDao.create(Author.builder().
+                name(authorDTO.getName()).
+                surname(authorDTO.getSurname()).
+                patronymic(authorDTO.getPatronymic()).
+                build());
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setAuthors(List.of(ConverterToDTO.convertAuthor(author)));
+        return answer;
+    }
+    private AnswerMessage addDocname(DocnameDTO docnameDTO) {
+        Docname docname = docnameDao.create(Docname.builder().
+                title(docnameDTO.getTitle()).
+                edition(docnameDTO.getEdition()).
+                isbn(docnameDTO.getIsbn()).
+                releaseDate(docnameDTO.getReleaseDate()).
+                author(Author.builder().
+                        id(docnameDTO.getAuthor().getId()).
+                        build()).
+                build());
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setDocnames(List.of(ConverterToDTO.convertDocname(docname)));
+        return answer;
+    }
+    private AnswerMessage addRole(RoleDTO roleDTO) {
+        List<Fund> funds = new ArrayList<>();
+        for (var fund : roleDTO.getFunds()) {
+            funds.add(fundDao.findById(fund.getId()));
+        }
+
+        try {
+            Role role = roleDao.create(Role.builder().
+                    name(roleDTO.getName()).
+                    build());
+
+            role.setFunds(funds);
+            role = roleDao.update(role);
+
+            AnswerMessage answer = getSuccessMessage();
+            answer.setRoles(ConverterToDTO.convertRoles(List.of(role)));
+            return answer;
+        }
+        catch (PersistenceException ex) {
+            return getFailureMessage("Can't add role");
+        }
+    }
+    private AnswerMessage addSimpleFund(SimpleFundDTO fundDTO) {
+        return getFailureMessage("not implemented yet");
+    }
+    private AnswerMessage updateUser(UserDTO userDTO) {
+        User user = userController.updateUser(User.builder().
+                id(userDTO.getId()).
+                name(userDTO.getName()).
+                role(Role.builder().
+                        id(userDTO.getRole().getId()).
+                        build()).
+                surname(userDTO.getSurname()).
+                login(userDTO.getLogin()).
+                pass(userDTO.getPass()).
+                build());
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setUsers(List.of(ConverterToDTO.convertUser(user)));
+
+        return answer;
+    }
+    private AnswerMessage updateSimpleFund(SimpleFundDTO fundDTO) {
+        Fund fund = fundDao.findById(fundDTO.getId());
+
+        if(fund != null)
+            fund.setName(fundDTO.getName());
+        else
+            return getFailureMessage("Can't update fund");
+
+        var finalFund = fundDao.update(fund);
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setSimpleFunds(List.of(ConverterToDTO.convertSimpleFund(finalFund)));
+
+        return answer;
+    }
+    private AnswerMessage updateRole(RoleDTO roleDTO) {
+        List<Fund> funds = new ArrayList<>();
+        for (var fund : roleDTO.getFunds()) {
+            funds.add(fundDao.findById(fund.getId()));
+        }
+
+        Role role = roleDao.update(Role.builder().
+                id(roleDTO.getId()).
+                name(roleDTO.getName()).
+                funds(funds).
+                build());
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setRoles(ConverterToDTO.convertRoles(List.of(role)));
+        return answer;
+    }
+    private AnswerMessage authenticate(UserDTO userDTO) {
+        if (!userController.authenticate(userDTO.getLogin(), userDTO.getPass()))
+            return getFailureMessage("Wrong login or password!");
+        else {
+            AnswerMessage answer = getSuccessMessage();
+            answer.setUsers(List.of(ConverterToDTO.convertUser(userController.getByLogin(userDTO.getLogin()))));
+            return answer;
+        }
+    }
+    private AnswerMessage register(UserDTO userDTO) {
+        if (!userController.register(User.builder().
+                name(userDTO.getName()).
+                surname(userDTO.getSurname()).
+                login(userDTO.getLogin()).
+                pass(userDTO.getPass()).
+                build()))
+            return getFailureMessage("Fail to register this user, try again");
+        else
+            return getSuccessMessage();
+    }
+    private AnswerMessage getAllFunds(UserDTO userDTO) {
+        List<Fund>funds = userController.getAllFunds(userDTO.getLogin());
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setFunds(ConverterToDTO.convertFunds(funds));
+        return answer;
+    }
+    private AnswerMessage getAllDocnames() {
+        AnswerMessage answer = getSuccessMessage();
+        answer.setDocnames(ConverterToDTO.convertDocnames(docnameDao.findAll()));
+        return answer;
+    }
+    private AnswerMessage getAllAuthors() {
+        AnswerMessage answer = getSuccessMessage();
+        answer.setAuthors(ConverterToDTO.convertAuthors(authorDao.findAll()));
+        return answer;
+    }
+    private AnswerMessage getAllReceiptsOfFunds(List<FundDTO> fundDTOS) {
+        List<Receipt> receipts = new ArrayList<>();
+        for(var fund : fundDTOS) {
+            receipts.addAll(receiptDao.findByColumn("fund", fundDao.findById(fund.getId())));
+        }
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setReceipts(ConverterToDTO.convertReceipts(receipts));
+        return answer;
+    }
+    private AnswerMessage getAllRoles() {
+        AnswerMessage answer = getSuccessMessage();
+        answer.setRoles(ConverterToDTO.convertRoles(userController.findAllRoles()));
+        return answer;
+    }
+    private AnswerMessage getAllUser() {
+        AnswerMessage answer = getSuccessMessage();
+        answer.setUsers(ConverterToDTO.convertUsers(userController.findAllUsers()));
+        return answer;
+    }
+    private AnswerMessage getAllSimpleFunds(UserDTO userDTO) {
+        List<Fund>funds = userController.getAllFunds(userDTO.getLogin());
+
+        AnswerMessage answer = getSuccessMessage();
+        answer.setSimpleFunds(ConverterToDTO.convertSimpleFunds(funds));
+        return answer;
     }
 
     private AnswerMessage getFailureMessage(String message) {

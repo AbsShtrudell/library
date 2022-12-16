@@ -68,19 +68,6 @@ class NetDataController implements DataController{
     }
 
     @Override
-    public FundDTO addFund(FundDTO fund) throws DataOperationException {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.ADD_FUND).
-                fund(fund).
-                build());
-
-        AnswerMessage message = client.receiveMsg();
-        checkMessage(message);
-
-        return message.getFunds().get(0);
-    }
-
-    @Override
     public AuthorDTO addAuthor(AuthorDTO author) throws DataOperationException {
         client.sendMsg(QueryMessage.builder().
                 method(MessageMethod.ADD_AUTHOR).
@@ -110,25 +97,12 @@ class NetDataController implements DataController{
     public void addReceipt(ReceiptDTO receipt) throws DataOperationException {
         receipt.setUser(user);
         client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.NEW_RECEIPT).
+                method(MessageMethod.ADD_RECEIPT).
                 receipt(receipt).
                 build());
 
         AnswerMessage message = client.receiveMsg();
         checkMessage(message);
-    }
-
-    @Override
-    public FundDTO updateFund(FundDTO fund) throws DataOperationException {
-        client.sendMsg(QueryMessage.builder().
-                method(MessageMethod.UPDATE_FUND).
-                fund(fund).
-                build());
-
-        AnswerMessage message = client.receiveMsg();
-        checkMessage(message);
-
-        return message.getFunds().get(0);
     }
 
     @Override
@@ -142,6 +116,19 @@ class NetDataController implements DataController{
         checkMessage(message);
 
         return message.getRoles().get(0);
+    }
+
+    @Override
+    public SimpleFundDTO updateSimpleFund(SimpleFundDTO fund) throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.UPDATE_SIMPLE_FUND).
+                simpleFund(fund).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getSimpleFunds().get(0);
     }
 
     @Override
@@ -172,6 +159,18 @@ class NetDataController implements DataController{
         checkMessage(message);
 
         return message.getFunds();
+    }
+
+    public List<SimpleFundDTO> getAllSimpleFunds() throws DataOperationException {
+        client.sendMsg(QueryMessage.builder().
+                method(MessageMethod.GET_ALL_SIMPLE_FUNDS).
+                user(user).
+                build());
+
+        AnswerMessage message = client.receiveMsg();
+        checkMessage(message);
+
+        return message.getSimpleFunds();
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Builder
 public class SimpleFundDTO implements Serializable {
     private final Integer id;
-    private final String name;
+    private String name;
 
     public SimpleFundDTO(Integer id, String name) {
         this.id = id;

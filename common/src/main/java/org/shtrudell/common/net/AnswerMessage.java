@@ -28,6 +28,8 @@ public class AnswerMessage implements Serializable {
     List<RoleDTO> roles;
     @Singular
     List<UserDTO> users;
+    @Singular
+    List<SimpleFundDTO> simpleFunds;
 
     private MessageResult result;
     private String message;

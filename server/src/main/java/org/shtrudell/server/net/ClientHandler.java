@@ -35,8 +35,7 @@ public class ClientHandler implements Runnable, Closeable {
             try {
                 QueryMessage queryMessage = receiveMsg();
                 AnswerMessage msg = messageHandler.handleMessage(queryMessage);
-                if(msg == null) continue;
-                sendMsg(msg);
+                if(msg != null) sendMsg(msg);
             } catch (IOException e) {
                 System.out.println("Client Disconnected");
                 close();

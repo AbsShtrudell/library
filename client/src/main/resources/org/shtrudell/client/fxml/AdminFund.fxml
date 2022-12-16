@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<HBox prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.AdminFund">
+<HBox prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/light_theme.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.shtrudell.client.fxml.AdminFund">
    <children>
-      <ListView prefHeight="536.0" prefWidth="396.0" />
+      <ListView fx:id="fundList" prefHeight="536.0" prefWidth="396.0" />
       <VBox prefHeight="548.0" prefWidth="750.0">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="69.0" prefWidth="551.0" spacing="10.0">
@@ -20,7 +17,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField promptText="Название фонда" />
+                  <TextField fx:id="fundNameInputField" promptText="Название фонда" />
                </children>
             </HBox>
          </children>

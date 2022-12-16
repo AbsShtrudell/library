@@ -27,6 +27,8 @@ public class QueryMessage implements Serializable {
     List<RoleDTO> roles;
     @Singular
     List<UserDTO> users;
+    @Singular
+    List<SimpleFundDTO> simpleFunds;
 
     private MessageMethod method;
 }
