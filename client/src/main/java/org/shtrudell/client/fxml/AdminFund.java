@@ -1,5 +1,6 @@
 package org.shtrudell.client.fxml;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -25,23 +26,6 @@ public class AdminFund {
             fundNameInputField.setText(newVal.getName());
         });
 
-        fundNameInputField.textProperty().addListener((v, oldVal, newVal) -> {
-            if(fundList.getSelectionModel().getSelectedItem() == null
-                    || newVal == null
-                    || newVal.isBlank()) return;
-
-            try {
-                SimpleFundDTO result = ClientApp.getDataController().updateSimpleFund(SimpleFundDTO.builder().
-                        id(fundList.getSelectionModel().getSelectedItem().getId()).
-                        name(newVal).
-                        build());
-
-                fundList.getSelectionModel().getSelectedItem().setName(result.getName());
-            } catch (DataOperationException e) {
-                AlertBox.display("Внимание", e.getMessage());
-            }
-        });
-
         try {
             fundList.getItems().setAll(ClientApp.getDataController().getAllSimpleFunds());
         } catch (DataOperationException e) {
@@ -49,4 +33,21 @@ public class AdminFund {
         }
     }
 
+    public void saveAction(ActionEvent actionEvent) {
+        if(fundNameInputField.getText() == null || fundNameInputField.getText().isBlank()) {
+            AlertBox.display("Внимание", "Название не должно быть пустым");
+            return;
+        }
+
+        try {
+            SimpleFundDTO result = ClientApp.getDataController().updateSimpleFund(SimpleFundDTO.builder().
+                    id(fundList.getSelectionModel().getSelectedItem().getId()).
+                    name(fundNameInputField.getText()).
+                    build());
+
+            fundList.getSelectionModel().getSelectedItem().setName(fundNameInputField.getText());
+        } catch (DataOperationException e) {
+            AlertBox.display("Внимание", e.getMessage());
+        }
+    }
 }
